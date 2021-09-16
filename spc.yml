@@ -1,0 +1,25 @@
+---
+# https://secrets-store-csi-driver.sigs.k8s.io/topics/sync-as-kubernetes-secret.html
+# https://github.com/hashicorp/vault/blob/main/website/content/docs/platform/k8s/csi/examples.mdx#environment-variable-dynamic-database-credentials
+
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: vault-creds
+spec:
+  provider: vault
+  parameters:
+    vaultAddress: "http://vault.csi-vault-test-app:8200"
+    roleName: "test"
+    objects: |
+      - objectName: "test-secret-from-vault" # References objectName below
+        secretPath: "secret/data/test?version=1"
+        secretKey: "password"
+#        secretArgs:
+#          version: '1'
+  secretObjects:
+  - secretName: test-synced-from-vault       # Name of the k8s secret
+    type: Opaque
+    data:
+      - objectName: test-secret-from-vault   # Name on storage, file name
+        key: password                        # Key within k8s secret for this value

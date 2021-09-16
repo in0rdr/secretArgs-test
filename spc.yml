@@ -17,6 +17,8 @@ spec:
         secretKey: "password"
 #        secretArgs:
 #          version: '1'
+#        secretArgs:
+#          version: 1
   secretObjects:
   - secretName: test-synced-from-vault       # Name of the k8s secret
     type: Opaque
